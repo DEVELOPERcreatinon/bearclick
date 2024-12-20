@@ -1,0 +1,12 @@
+[
+    {
+        "type": "click",
+        "price": 10,
+        "count": 5
+    },
+    {
+        "type": "gems",
+        "price": 20,
+        "count": 3
+    }
+]

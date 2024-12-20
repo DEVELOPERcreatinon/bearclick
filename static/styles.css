@@ -1,0 +1,94 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #e34b6e;
+}
+
+h2 {
+    color: #e34b6e;
+}
+
+form {
+    margin: 20px 0;
+}
+
+h3 {
+    color: #e84a7a;
+}
+
+h4 {
+    color: #e84a7a;
+}
+
+h5 {
+    color: #e84a7a;
+}
+
+h6 {
+    color: #e84a7a;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    margin: 10px 0;
+    width: 200px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #e34b6e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #b83565;
+}
+
+#message {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#actions {
+    margin-top: 20px;
+}
+
+.action {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.action button {
+    margin-top: 10px;
+}
+
+.glitch a{
+  color: #4a90e9;
+  text-decoration: none;
+}
+
+.glitch a:hover{
+  text-decoration: underline;
+}
+
+button .clickbutton{
+  border-radius: 50%,
+}

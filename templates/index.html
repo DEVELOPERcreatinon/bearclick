@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер с Мишкой</title>
+    <link rel="shortcut icon" href="https://cdn.glitch.global/2cca204c-1adb-4251-b9f4-9d104d974bc6/hand-up-solid-24.ico?v=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            padding: 10px; /* Отступы для мобильных устройств */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрируем содержимое по горизонтали */
+        }
+
+        #logoutButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            margin-bottom: 25px;
+            margin-left: 25px;
+        }
+
+        #clickButton {
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 50%;
+            background-color: #e34b6e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #clickButton:hover {
+            background-color: #ad2f6c;
+        }
+
+        .news-container {
+            width: 300px; /* Ширина 300 пикселей */
+            height: 200px; /* Высота 200 пикселей */
+            border: 1px solid #ccc; /* Рамка для контейнера */
+            padding: 5px; /* Отступы внутри контейнера */
+            box-sizing: border-box; /* Учитываем отступы в размерах */
+            overflow: auto; /* Прокрутка, если содержимое не помещается */
+            text-align: center; /* Центрируем текст */
+            border-radius: 8px; /* Закругленные углы */
+            background-color: #f9f9f9; /* Цвет фона */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта */
+            margin: 10px 0; /* Отступы сверху и снизу */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Центрируем содержимое по вертикали */
+            align-items: center; /* Центрируем содержимое по горизонтали */
+        }
+
+        .news-item {
+            font-size: 30px; /* Увеличиваем размер шрифта до 30px */
+            margin: 2px 0; /* Отступы между новостями */
+        }
+
+        img {
+            width: 100%; /* Картинка занимает всю ширину контейнера */
+            height: auto; /* Высота автоматически подстраивается */
+            border-radius: 4px; /* Закругленные углы для картинки */
+        }
+
+        h1, h2, h4 {
+            text-align: center; /* Центрируем заголовки */
+        }
+
+        .glitch {
+            text-align: center; /* Центрируем текст */
+        }
+
+        h1{
+            margin-top: 35px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Добро пожаловать в Кликер с Мишкой!</h1>
+    
+    <div id="user-info">
+        <span id="username-display"></span>
+        <button id="logoutButton">Выйти</button>
+    </div>
+    <h2 class="ping" id="ping">Пинг: {ping}ms</h2>
+
+    <h2>Новости</h2>
+    <div class="news-container">
+        <h2 class="news-item">Бета-тест запущен!</h2>
+        <p class="news-item">мы стараемся выпустить как можно быстрее</p>
+    </div>
+
+    <p>Клики: <span id="clicks">0</span></p>
+    <p>Кристаллы: <span id="gems">0</span></p>
+    <button id="clickButton" class="clickbutton">Клик!</button>
+    <button id="shopButton">В магазин</button>
+    
+    <div class="glitch">
+    </div>
+    <script>
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('username-display').textContent = `Вход: ${username}`;
+            fetch(`/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('clicks').textContent = data.clicks;
+                    document.getElementById('gems').textContent = data.gems;
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных пользователя:', error);
+            });
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.removeItem('username');
+            window.location.href = '/login';
+        });
+
+        document.getElementById('clickButton').addEventListener('click', () => {
+            fetch('/click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('clicks').textContent = data.clicks;
+                    document.getElementById('gems').textContent = data.gems;
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке клика:', error);
+            });
+        });
+
+        document.getElementById('shopButton').addEventListener('click', () => {
+            window.location.href = '/shop';
+        });
+
+        async function getPing() {
+            const start = performance.now();
+            try {
+                await fetch(window.location.href);
+                const end = performance.now();
+                const ping = Math.round(end - start);
+                document.getElementById('ping').textContent = `Пинг: ${ping}ms`; // Исправлено здесь
+            } catch (error) {
+                console.error('Ошибка при получении пинга:', error);
+            }
+        }
+
+        setInterval(getPing, 2000);
+        getPing();
+    </script>
+</body>
+</html>

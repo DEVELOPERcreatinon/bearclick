@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="shortcut icon" href="https://cdn.glitch.global/2cca204c-1adb-4251-b9f4-9d104d974bc6/hand-up-solid-24.ico?v=1">
+</head>
+<body>
+    <h1>Магазин</h1>
+    <div id="actions"></div>
+    <button id="backButton">Назад в меню</button>
+    <script>
+        const username = localStorage.getItem('username');
+        fetch('/actions')
+            .then(response => response.json())
+            .then(actions => {
+                const actionsDiv = document.getElementById('actions');
+                if (actions.length === 0) {
+                    actionsDiv.innerHTML = '<p>Нет доступных акций.</p>';
+                    return;
+                }
+                actions.forEach((action, index) => {
+                    const actionDiv = document.createElement('div');
+                    actionDiv.className = 'action';
+                    actionDiv.innerHTML = `${action.type === 'click' ? 'Клики' : 'Кристаллы'}: ${action.count} за ${action.price} ${action.type === 'click' ? 'кристаллов' : 'кликов'}`;
+                    const buyButton = document.createElement('button');
+                    buyButton.innerText = 'Купить';
+                    buyButton.onclick = () => {
+                        fetch('/buy-action', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ username, actionIndex: index })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert(data.message || 'Покупка успешна!');
+                        });
+                    };
+                    actionDiv.appendChild(buyButton);
+                    actionsDiv.appendChild(actionDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке акций:', error);
+            });
+
+        document.getElementById('backButton').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>
